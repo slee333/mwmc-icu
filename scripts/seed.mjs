@@ -44,8 +44,13 @@ const SPREADSHEET_ID = process.env.GOOGLE_SPREADSHEET_ID;
 const ADMIN_USERNAME = process.env.ADMIN_USERNAME || "admin";
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "changeme";
 
-const rawKey = process.env.GOOGLE_PRIVATE_KEY || "";
-const privateKey = rawKey.replace(/^["']|["']$/g, "").replace(/\\n/g, "\n");
+const rawKeyB64 = process.env.GOOGLE_PRIVATE_KEY_BASE64;
+const rawKey = rawKeyB64
+  ? Buffer.from(rawKeyB64, "base64").toString("utf-8")
+  : (process.env.GOOGLE_PRIVATE_KEY || "");
+const privateKey = rawKey
+  .replace(/^["']|["']$/g, "")
+  .split("\\n").join("\n");
 
 const auth = new google.auth.GoogleAuth({
   credentials: {

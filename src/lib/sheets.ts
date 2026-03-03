@@ -12,8 +12,7 @@ function getSheets(): sheets_v4.Sheets {
     : (process.env.GOOGLE_PRIVATE_KEY || "");
   const privateKey = rawKey
     .replace(/^["']|["']$/g, "")
-    .replace(/\r\n/g, "\n")
-    .replace(/\\n/g, "\n");
+    .split("\\n").join("\n");
 
   const auth = new google.auth.GoogleAuth({
     credentials: {
