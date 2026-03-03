@@ -6,7 +6,8 @@ const JWT_SECRET = new TextEncoder().encode(
 );
 const COOKIE_NAME = "icu-study-token";
 
-const PUBLIC_PATHS = [
+// Paths matched with startsWith (prefixes)
+const PUBLIC_PREFIXES = [
   "/login",
   "/api/auth/login",
   "/enroll",
@@ -16,11 +17,17 @@ const PUBLIC_PATHS = [
   "/api/surveys",
 ];
 
+// Paths matched exactly
+const PUBLIC_EXACT = ["/", "/log"];
+
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Allow public paths
-  if (PUBLIC_PATHS.some((path) => pathname.startsWith(path))) {
+  if (
+    PUBLIC_EXACT.includes(pathname) ||
+    PUBLIC_PREFIXES.some((path) => pathname.startsWith(path))
+  ) {
     return NextResponse.next();
   }
 
