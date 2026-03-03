@@ -84,15 +84,15 @@ export default function ExportPage() {
           subtitle="Overview of enrollment progress."
         >
           <div className="grid grid-cols-3 gap-4">
-            <div className="bg-input rounded-lg p-4 text-center">
+            <div className="bg-input border border-card-border rounded-lg p-4 text-center">
               <div className="text-2xl font-bold text-accent">{subjectCount}</div>
               <div className="text-xs text-text-muted mt-1">Total Enrolled</div>
             </div>
-            <div className="bg-input rounded-lg p-4 text-center">
+            <div className="bg-input border border-card-border rounded-lg p-4 text-center">
               <div className="text-2xl font-bold text-text-dim">--</div>
               <div className="text-xs text-text-muted mt-1">Control</div>
             </div>
-            <div className="bg-input rounded-lg p-4 text-center">
+            <div className="bg-input border border-card-border rounded-lg p-4 text-center">
               <div className="text-2xl font-bold text-success">--</div>
               <div className="text-xs text-text-muted mt-1">Intervention</div>
             </div>

@@ -20,7 +20,7 @@ export { invalidateCache };
 export async function performRandomization(
   site: string,
   maxRetries = 3
-): Promise<{ allocation: "Control" | "Intervention"; internalId: string }> {
+): Promise<{ allocation: "Control" | "Intervention"; studyId: string }> {
   for (let attempt = 0; attempt < maxRetries; attempt++) {
     // Force fresh read
     invalidateCache(SHEET_TABS.RANDOMIZATION_STATE);
@@ -53,7 +53,7 @@ export async function performRandomization(
 
     const allocation = remaining.shift()!;
     const prefix = SITE_PREFIXES[site] || "XX";
-    const internalId = `${prefix}-${String(nextId).padStart(4, "0")}`;
+    const studyId = `${prefix}-${String(nextId).padStart(4, "0")}`;
     const newLastUpdated = new Date().toISOString();
 
     const newValues = [
@@ -72,7 +72,7 @@ export async function performRandomization(
       await updateRow(SHEET_TABS.RANDOMIZATION_STATE, siteRowIndex, newValues);
       return {
         allocation: allocation as "Control" | "Intervention",
-        internalId,
+        studyId,
       };
     }
 

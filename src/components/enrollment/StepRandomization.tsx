@@ -39,7 +39,7 @@ export default function StepRandomization({
       const data = await res.json();
       updateForm({
         allocation: data.allocation,
-        internalId: data.internalId,
+        studyId: data.studyId,
       });
       onNext();
     } catch (err) {
@@ -61,8 +61,6 @@ export default function StepRandomization({
           Site: <strong className="text-text">{form.site}</strong> &middot;
           Researcher:{" "}
           <strong className="text-text">{form.researcherName}</strong> &middot;
-          Study ID: <strong className="text-text">{form.studyId}</strong> &middot;
-          MRN: <strong className="text-text">{form.mrn}</strong> &middot;
           Attending: <strong className="text-text">{form.icuAttending}</strong>
         </p>
       </div>

@@ -1,7 +1,6 @@
 export interface Subject {
   studyId: string;
-  internalId: string;
-  mrn: string;
+  mrnHash: string;
   site: string;
   allocation: "Control" | "Intervention";
   icuAttending: string;
@@ -15,7 +14,6 @@ export interface Subject {
 
 export interface LlmInteraction {
   studyId: string;
-  internalId: string;
   hpText: string;
   llmModel: string;
   llmResponse: string;
@@ -25,7 +23,6 @@ export interface LlmInteraction {
 
 export interface PostEnrollmentSurvey {
   studyId: string;
-  internalId: string;
   surveyResponses: string; // JSON
   timestamp: string;
 }
@@ -33,7 +30,7 @@ export interface PostEnrollmentSurvey {
 export interface RandomizationState {
   site: string;
   remainingAllocations: string; // JSON array
-  nextInternalId: number;
+  nextStudyId: number;
   lastUpdated: string;
 }
 
@@ -55,15 +52,13 @@ export interface EnrollmentFormData {
   site: string;
   researcherName: string;
   researcherEmail: string;
-  studyId: string;
-  studyIdConfirmed: boolean;
-  mrn: string;
   icuAttending: string;
+  mrnHash: string;
   inclusionChecks: Record<string, boolean>;
   exclusionChecks: Record<string, boolean>;
   eligibilityResult: EligibilityResult | null;
   allocation: "Control" | "Intervention" | null;
-  internalId: string;
+  studyId: string;
   hpText: string;
   llmModel: string;
   llmResult: string;

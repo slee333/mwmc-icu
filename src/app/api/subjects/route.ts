@@ -22,17 +22,11 @@ export async function GET() {
 }
 
 export async function POST(request: NextRequest) {
-  const user = await getCurrentUser();
-  if (!user) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
   try {
     const body = await request.json();
     const {
       studyId,
-      internalId,
-      mrn,
+      mrnHash,
       site,
       allocation,
       icuAttending,
@@ -43,7 +37,7 @@ export async function POST(request: NextRequest) {
       llmModel,
     } = body;
 
-    if (!studyId || !internalId || !site || !allocation) {
+    if (!studyId || !site || !allocation) {
       return NextResponse.json(
         { error: "Missing required fields" },
         { status: 400 }
@@ -53,8 +47,7 @@ export async function POST(request: NextRequest) {
     const enrollmentDate = new Date().toISOString();
     const values = [
       studyId,
-      internalId,
-      mrn || "",
+      mrnHash || "",
       site,
       allocation,
       icuAttending || "",

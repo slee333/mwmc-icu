@@ -1,13 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getCurrentUser } from "@/lib/auth";
 import { performRandomization } from "@/lib/randomization";
 
 export async function POST(request: NextRequest) {
-  const user = await getCurrentUser();
-  if (!user) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
   try {
     const { site } = await request.json();
 
@@ -22,7 +16,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({
       allocation: result.allocation,
-      internalId: result.internalId,
+      studyId: result.studyId,
     });
   } catch (error) {
     console.error("Randomization error:", error);

@@ -1,11 +1,12 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import Card from "@/components/ui/Card";
 import Input from "@/components/ui/Input";
 import Select from "@/components/ui/Select";
 import Button from "@/components/ui/Button";
 import { SITES, ICU_ATTENDINGS } from "@/lib/constants";
+import { sha256 } from "@/lib/hash";
 import type { EnrollmentFormData } from "@/lib/types";
 
 interface StepRegistrationProps {
@@ -19,39 +20,11 @@ export default function StepRegistration({
   updateForm,
   onNext,
 }: StepRegistrationProps) {
-  const [idCheckResult, setIdCheckResult] = useState<string | null>(null);
-  const [checking, setChecking] = useState(false);
-
-  const checkStudyId = useCallback(
-    async (id: string) => {
-      if (!id || !form.site) return;
-      setChecking(true);
-      try {
-        const res = await fetch(
-          `/api/subjects/check-id?studyId=${encodeURIComponent(id)}`
-        );
-        const data = await res.json();
-        if (data.exists) {
-          setIdCheckResult("This Study ID has already been used.");
-        } else {
-          setIdCheckResult(null);
-        }
-      } catch {
-        setIdCheckResult(null);
-      }
-      setChecking(false);
-    },
-    [form.site]
-  );
-
-  useEffect(() => {
-    if (form.studyId) {
-      const timer = setTimeout(() => checkStudyId(form.studyId), 500);
-      return () => clearTimeout(timer);
-    } else {
-      setIdCheckResult(null);
-    }
-  }, [form.studyId, checkStudyId]);
+  const [mrn, setMrn] = useState("");
+  const [mrnChecking, setMrnChecking] = useState(false);
+  const [mrnDuplicate, setMrnDuplicate] = useState(false);
+  const [mrnChecked, setMrnChecked] = useState(false);
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const siteOptions = SITES.map((s) => ({ value: s, label: s }));
   const attendingOptions = ICU_ATTENDINGS.map((a) => ({
@@ -59,16 +32,49 @@ export default function StepRegistration({
     label: a,
   }));
 
+  useEffect(() => {
+    if (!mrn.trim()) {
+      updateForm({ mrnHash: "" });
+      setMrnDuplicate(false);
+      setMrnChecked(false);
+      return;
+    }
+
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+
+    debounceRef.current = setTimeout(async () => {
+      const hash = await sha256(mrn);
+      updateForm({ mrnHash: hash });
+
+      setMrnChecking(true);
+      try {
+        const res = await fetch("/api/subjects/check-mrn", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ mrnHash: hash }),
+        });
+        const data = await res.json();
+        setMrnDuplicate(data.exists);
+      } catch {
+        setMrnDuplicate(false);
+      }
+      setMrnChecking(false);
+      setMrnChecked(true);
+    }, 500);
+
+    return () => {
+      if (debounceRef.current) clearTimeout(debounceRef.current);
+    };
+  }, [mrn]); // eslint-disable-line react-hooks/exhaustive-deps
+
   const canProceed =
     form.site &&
     form.researcherName &&
     form.researcherEmail &&
-    form.studyId &&
-    form.studyIdConfirmed &&
-    form.mrn &&
     form.icuAttending &&
-    !idCheckResult &&
-    !checking;
+    form.mrnHash &&
+    !mrnDuplicate &&
+    !mrnChecking;
 
   return (
     <Card title="Study Registration" subtitle="Enter study site and researcher information to begin enrollment.">
@@ -110,32 +116,6 @@ export default function StepRegistration({
 
       <div className="border-t border-card-border my-5" />
 
-      <div className="flex gap-4 mb-4">
-        <div className="flex-1">
-          <Input
-            label="ICU Study ID (001-500)"
-            value={form.studyId}
-            onChange={(e) => {
-              const val = e.target.value.replace(/[^0-9]/g, "").slice(0, 3);
-              updateForm({ studyId: val });
-            }}
-            placeholder="e.g. 042"
-            error={idCheckResult || undefined}
-          />
-          {checking && (
-            <p className="text-xs text-text-muted mt-1">Checking...</p>
-          )}
-        </div>
-        <div className="flex-1">
-          <Input
-            label="Patient MRN"
-            value={form.mrn}
-            onChange={(e) => updateForm({ mrn: e.target.value })}
-            placeholder="Enter MRN"
-          />
-        </div>
-      </div>
-
       <div className="mb-4">
         <Select
           label="ICU Attending"
@@ -146,28 +126,29 @@ export default function StepRegistration({
         />
       </div>
 
-      <div
-        onClick={() => updateForm({ studyIdConfirmed: !form.studyIdConfirmed })}
-        className={`
-          flex items-start gap-3 px-4 py-3 rounded-lg cursor-pointer mb-5
-          border transition-all duration-150
-          ${form.studyIdConfirmed ? "bg-warning/5 border-warning/20" : "border-input-border"}
-        `}
-      >
-        <div
-          className={`
-            w-5 h-5 rounded flex-shrink-0 mt-0.5
-            border-2 flex items-center justify-center transition-all duration-150
-            ${form.studyIdConfirmed ? "border-warning bg-warning" : "border-input-border"}
-          `}
-        >
-          {form.studyIdConfirmed && (
-            <span className="text-white text-[13px] font-bold">&#10003;</span>
-          )}
-        </div>
-        <span className="text-sm text-text-dim leading-relaxed">
-          I confirm this Study ID has NOT been previously randomized
-        </span>
+      <div className="border-t border-card-border my-5" />
+
+      <div className="mb-4">
+        <Input
+          label="Patient MRN"
+          value={mrn}
+          onChange={(e) => setMrn(e.target.value)}
+          placeholder="Enter patient MRN"
+        />
+        <p className="text-xs text-text-muted mt-1">
+          MRN is hashed locally and never stored in plaintext.
+        </p>
+        {mrnChecking && (
+          <p className="text-xs text-accent mt-1">Checking for duplicates...</p>
+        )}
+        {mrnDuplicate && (
+          <p className="text-xs text-danger font-semibold mt-1">
+            This patient has already been enrolled. Duplicate enrollment is not permitted.
+          </p>
+        )}
+        {mrnChecked && !mrnDuplicate && !mrnChecking && mrn.trim() && (
+          <p className="text-xs text-success mt-1">No duplicate found.</p>
+        )}
       </div>
 
       <Button disabled={!canProceed} onClick={onNext}>

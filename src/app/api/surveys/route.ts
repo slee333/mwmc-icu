@@ -1,16 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getCurrentUser } from "@/lib/auth";
 import { appendRow } from "@/lib/sheets";
 import { SHEET_TABS } from "@/lib/constants";
 
 export async function POST(request: NextRequest) {
-  const user = await getCurrentUser();
-  if (!user) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
   try {
-    const { studyId, internalId, responses } = await request.json();
+    const { studyId, responses } = await request.json();
 
     if (!studyId || !responses) {
       return NextResponse.json(
@@ -22,7 +16,6 @@ export async function POST(request: NextRequest) {
     const timestamp = new Date().toISOString();
     await appendRow(SHEET_TABS.POST_ENROLLMENT_SURVEYS, [
       studyId,
-      internalId || "",
       JSON.stringify(responses),
       timestamp,
     ]);

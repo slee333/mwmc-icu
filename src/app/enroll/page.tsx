@@ -1,42 +1,20 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useAuth } from "@/hooks/useAuth";
 import { useEnrollment } from "@/hooks/useEnrollment";
 import Header from "@/components/layout/Header";
-import NavTabs from "@/components/layout/NavTabs";
 import StepProgress from "@/components/enrollment/StepProgress";
 import StepRegistration from "@/components/enrollment/StepRegistration";
 import StepEligibility from "@/components/enrollment/StepEligibility";
 import StepRandomization from "@/components/enrollment/StepRandomization";
 import StepAllocation from "@/components/enrollment/StepAllocation";
 import StepComplete from "@/components/enrollment/StepComplete";
-import Spinner from "@/components/ui/Spinner";
 
 export default function EnrollPage() {
-  const { user, loading: authLoading } = useAuth();
   const { step, form, setStep, updateForm, reset } = useEnrollment();
-  const [subjectCount, setSubjectCount] = useState(0);
-
-  useEffect(() => {
-    fetch("/api/subjects")
-      .then((r) => r.json())
-      .then((d) => setSubjectCount(d.subjects?.length || 0))
-      .catch(() => {});
-  }, []);
-
-  if (authLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <Spinner size="lg" />
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen">
-      <Header user={user} />
-      <NavTabs user={user} subjectCount={subjectCount} />
+      <Header user={null} />
       <main className="max-w-[900px] mx-auto py-8 px-6">
         <StepProgress current={step} total={5} />
 

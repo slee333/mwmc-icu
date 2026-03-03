@@ -19,8 +19,7 @@ export default function StepComplete({ form, onReset }: StepCompleteProps) {
         </h2>
         <p className="text-[13px] text-text-dim text-center max-w-[500px] mx-auto mt-2 mb-6">
           Subject{" "}
-          <strong className="text-accent">{form.studyId}</strong> (
-          <strong className="text-accent">{form.internalId}</strong>) has been
+          <strong className="text-accent">{form.studyId}</strong> has been
           enrolled in the{" "}
           <strong
             className={

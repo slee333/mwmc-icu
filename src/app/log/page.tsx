@@ -10,8 +10,6 @@ import Spinner from "@/components/ui/Spinner";
 
 interface SubjectRow {
   "Study ID": string;
-  "Internal ID": string;
-  MRN: string;
   Site: string;
   Allocation: string;
   "ICU Attending": string;
@@ -73,7 +71,7 @@ export default function LogPage() {
                 <table className="w-full border-collapse text-[13px]">
                   <thead>
                     <tr>
-                      {["ID", "Internal ID", "Site", "Arm", "Attending", "Researcher", "Date", "LLM"].map(
+                      {["Study ID", "Site", "Arm", "Attending", "Researcher", "Date", "LLM"].map(
                         (h) => (
                           <th
                             key={h}
@@ -90,9 +88,6 @@ export default function LogPage() {
                       <tr key={i} className="border-b border-card-border">
                         <td className="px-3 py-2.5 font-mono font-bold text-accent">
                           {s["Study ID"]}
-                        </td>
-                        <td className="px-3 py-2.5 font-mono text-text-dim">
-                          {s["Internal ID"]}
                         </td>
                         <td className="px-3 py-2.5 text-text-dim">
                           {s.Site?.replace(" Medical Center", "").replace(

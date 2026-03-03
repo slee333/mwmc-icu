@@ -1,18 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getCurrentUser } from "@/lib/auth";
 import { queryLLM } from "@/lib/anthropic";
 import { queryGemini } from "@/lib/gemini";
 import { appendRow } from "@/lib/sheets";
 import { SHEET_TABS, LLM_MODELS, DEFAULT_LLM_MODEL } from "@/lib/constants";
 
 export async function POST(request: NextRequest) {
-  const user = await getCurrentUser();
-  if (!user) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
   try {
-    const { hpText, studyId, internalId, model } = await request.json();
+    const { hpText, studyId, model } = await request.json();
 
     if (!hpText || !hpText.trim()) {
       return NextResponse.json(
@@ -42,7 +36,6 @@ export async function POST(request: NextRequest) {
     const timestamp = new Date().toISOString();
     await appendRow(SHEET_TABS.LLM_INTERACTIONS, [
       studyId || "",
-      internalId || "",
       hpText,
       result.model,
       result.response,

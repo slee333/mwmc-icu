@@ -71,8 +71,7 @@ export const SHEET_TABS = {
 // Sheet column headers
 export const SUBJECT_HEADERS = [
   "Study ID",
-  "Internal ID",
-  "MRN",
+  "MRN Hash",
   "Site",
   "Allocation",
   "ICU Attending",
@@ -86,7 +85,6 @@ export const SUBJECT_HEADERS = [
 
 export const LLM_INTERACTION_HEADERS = [
   "Study ID",
-  "Internal ID",
   "H&P Text",
   "LLM Model",
   "LLM Response",
@@ -96,7 +94,6 @@ export const LLM_INTERACTION_HEADERS = [
 
 export const SURVEY_HEADERS = [
   "Study ID",
-  "Internal ID",
   "Survey Responses",
   "Timestamp",
 ];
@@ -104,7 +101,7 @@ export const SURVEY_HEADERS = [
 export const RANDOMIZATION_HEADERS = [
   "Site",
   "Remaining Allocations",
-  "Next Internal ID",
+  "Next Study ID",
   "Last Updated",
 ];
 

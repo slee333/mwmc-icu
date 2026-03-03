@@ -34,7 +34,6 @@ export default function StepAllocation({
         body: JSON.stringify({
           hpText: form.hpText,
           studyId: form.studyId,
-          internalId: form.internalId,
           model: form.llmModel,
         }),
       });
@@ -62,8 +61,7 @@ export default function StepAllocation({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           studyId: form.studyId,
-          internalId: form.internalId,
-          mrn: form.mrn,
+          mrnHash: form.mrnHash,
           site: form.site,
           allocation: form.allocation,
           icuAttending: form.icuAttending,
@@ -109,18 +107,10 @@ export default function StepAllocation({
         <div className="flex gap-6">
           <div>
             <div className="text-[11px] text-text-muted uppercase tracking-widest">
-              Subject ID
+              Study ID
             </div>
             <div className="text-2xl font-extrabold font-[family-name:var(--font-mono)] text-accent mt-0.5">
               {form.studyId}
-            </div>
-          </div>
-          <div>
-            <div className="text-[11px] text-text-muted uppercase tracking-widest">
-              Internal ID
-            </div>
-            <div className="text-2xl font-extrabold font-[family-name:var(--font-mono)] text-accent mt-0.5">
-              {form.internalId}
             </div>
           </div>
           <div>

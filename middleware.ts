@@ -6,7 +6,15 @@ const JWT_SECRET = new TextEncoder().encode(
 );
 const COOKIE_NAME = "icu-study-token";
 
-const PUBLIC_PATHS = ["/login", "/api/auth/login"];
+const PUBLIC_PATHS = [
+  "/login",
+  "/api/auth/login",
+  "/enroll",
+  "/api/subjects",
+  "/api/randomize",
+  "/api/llm",
+  "/api/surveys",
+];
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;

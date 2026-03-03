@@ -82,8 +82,7 @@ async function main() {
   await clearAndWrite("Subjects", [
     [
       "Study ID",
-      "Internal ID",
-      "MRN",
+      "MRN Hash",
       "Site",
       "Allocation",
       "ICU Attending",
@@ -100,7 +99,6 @@ async function main() {
   await clearAndWrite("LLM_Interactions", [
     [
       "Study ID",
-      "Internal ID",
       "H&P Text",
       "LLM Model",
       "LLM Response",
@@ -111,13 +109,13 @@ async function main() {
 
   // 3. Post_Enrollment_Surveys - headers only
   await clearAndWrite("Post_Enrollment_Surveys", [
-    ["Study ID", "Internal ID", "Survey Responses", "Timestamp"],
+    ["Study ID", "Survey Responses", "Timestamp"],
   ]);
 
   // 4. Randomization_State - headers + 2 site rows
   const now = new Date().toISOString();
   await clearAndWrite("Randomization_State", [
-    ["Site", "Remaining Allocations", "Next Internal ID", "Last Updated"],
+    ["Site", "Remaining Allocations", "Next Study ID", "Last Updated"],
     ["MetroWest Medical Center", "[]", "1", now],
     ["St. Vincent Hospital", "[]", "1", now],
   ]);
