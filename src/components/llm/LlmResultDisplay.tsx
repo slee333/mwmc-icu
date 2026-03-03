@@ -28,7 +28,7 @@ export default function LlmResultDisplay({ result }: LlmResultDisplayProps) {
           {copied ? "Copied!" : "Copy Results"}
         </Button>
       </div>
-      <div className="bg-bg border border-card-border rounded-lg p-5 mt-4 max-h-[500px] overflow-y-auto text-[13px] leading-relaxed prose prose-sm max-w-none">
+      <div className="bg-bg border border-card-border rounded-lg p-5 mt-4 max-h-[600px] overflow-y-auto prose prose-sm max-w-none prose-headings:text-text prose-headings:font-bold prose-p:text-text-dim prose-strong:text-text prose-li:text-text-dim prose-hr:border-card-border">
         <ReactMarkdown remarkPlugins={[remarkGfm]}>{result}</ReactMarkdown>
       </div>
     </div>
