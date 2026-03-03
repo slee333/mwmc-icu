@@ -44,10 +44,13 @@ const SPREADSHEET_ID = process.env.GOOGLE_SPREADSHEET_ID;
 const ADMIN_USERNAME = process.env.ADMIN_USERNAME || "admin";
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "changeme";
 
+const rawKey = process.env.GOOGLE_PRIVATE_KEY || "";
+const privateKey = rawKey.replace(/^["']|["']$/g, "").replace(/\\n/g, "\n");
+
 const auth = new google.auth.GoogleAuth({
   credentials: {
     client_email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
-    private_key: process.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, "\n"),
+    private_key: privateKey,
   },
   scopes: ["https://www.googleapis.com/auth/spreadsheets"],
 });

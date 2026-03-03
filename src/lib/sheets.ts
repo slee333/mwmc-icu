@@ -5,10 +5,20 @@ let sheetsClient: sheets_v4.Sheets | null = null;
 function getSheets(): sheets_v4.Sheets {
   if (sheetsClient) return sheetsClient;
 
+  // GOOGLE_PRIVATE_KEY_BASE64 is preferred on Vercel (no newline ambiguity)
+  // Falls back to GOOGLE_PRIVATE_KEY with newline normalization
+  const rawKey = process.env.GOOGLE_PRIVATE_KEY_BASE64
+    ? Buffer.from(process.env.GOOGLE_PRIVATE_KEY_BASE64, "base64").toString("utf-8")
+    : (process.env.GOOGLE_PRIVATE_KEY || "");
+  const privateKey = rawKey
+    .replace(/^["']|["']$/g, "")
+    .replace(/\r\n/g, "\n")
+    .replace(/\\n/g, "\n");
+
   const auth = new google.auth.GoogleAuth({
     credentials: {
       client_email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
-      private_key: process.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, "\n"),
+      private_key: privateKey,
     },
     scopes: ["https://www.googleapis.com/auth/spreadsheets"],
   });
