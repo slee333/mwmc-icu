@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { queryLLM } from "@/lib/anthropic";
 import { queryGemini } from "@/lib/gemini";
+import { queryOpenAI } from "@/lib/openai";
 import { appendRow } from "@/lib/sheets";
 import { SHEET_TABS, LLM_MODELS, DEFAULT_LLM_MODEL } from "@/lib/constants";
 
@@ -28,6 +29,8 @@ export async function POST(request: NextRequest) {
 
     if (modelConfig.provider === "gemini") {
       result = await queryGemini(hpText, modelConfig.id);
+    } else if (modelConfig.provider === "openai") {
+      result = await queryOpenAI(hpText, modelConfig.id);
     } else {
       result = await queryLLM(hpText);
     }

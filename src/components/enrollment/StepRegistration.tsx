@@ -6,7 +6,6 @@ import Input from "@/components/ui/Input";
 import Select from "@/components/ui/Select";
 import Button from "@/components/ui/Button";
 import { SITES, ICU_ATTENDINGS } from "@/lib/constants";
-import { sha256 } from "@/lib/hash";
 import type { EnrollmentFormData } from "@/lib/types";
 
 interface StepRegistrationProps {
@@ -34,7 +33,7 @@ export default function StepRegistration({
 
   useEffect(() => {
     if (!mrn.trim()) {
-      updateForm({ mrnHash: "" });
+      updateForm({ mrn: "" });
       setMrnDuplicate(false);
       setMrnChecked(false);
       return;
@@ -43,15 +42,14 @@ export default function StepRegistration({
     if (debounceRef.current) clearTimeout(debounceRef.current);
 
     debounceRef.current = setTimeout(async () => {
-      const hash = await sha256(mrn);
-      updateForm({ mrnHash: hash });
+      updateForm({ mrn: mrn.trim() });
 
       setMrnChecking(true);
       try {
         const res = await fetch("/api/subjects/check-mrn", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ mrnHash: hash }),
+          body: JSON.stringify({ mrn: mrn.trim() }),
         });
         const data = await res.json();
         setMrnDuplicate(data.exists);
@@ -72,7 +70,7 @@ export default function StepRegistration({
     form.researcherName &&
     form.researcherEmail &&
     form.icuAttending &&
-    form.mrnHash &&
+    form.mrn &&
     !mrnDuplicate &&
     !mrnChecking;
 
@@ -136,7 +134,7 @@ export default function StepRegistration({
           placeholder="Enter patient MRN"
         />
         <p className="text-xs text-text-muted mt-1">
-          MRN is hashed locally and never stored in plaintext.
+          MRN is stored as entered for study records.
         </p>
         {mrnChecking && (
           <p className="text-xs text-accent mt-1">Checking for duplicates...</p>

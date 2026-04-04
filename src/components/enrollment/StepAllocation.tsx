@@ -61,7 +61,7 @@ export default function StepAllocation({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           studyId: form.studyId,
-          mrnHash: form.mrnHash,
+          mrn: form.mrn,
           site: form.site,
           allocation: form.allocation,
           icuAttending: form.icuAttending,

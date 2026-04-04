@@ -26,7 +26,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const {
       studyId,
-      mrnHash,
+      mrn,
       site,
       allocation,
       icuAttending,
@@ -47,7 +47,7 @@ export async function POST(request: NextRequest) {
     const enrollmentDate = new Date().toISOString();
     const values = [
       studyId,
-      mrnHash || "",
+      mrn || "",
       site,
       allocation,
       icuAttending || "",

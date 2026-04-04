@@ -1,6 +1,6 @@
 export interface Subject {
   studyId: string;
-  mrnHash: string;
+  mrn: string;
   site: string;
   allocation: "Control" | "Intervention";
   icuAttending: string;
@@ -53,7 +53,7 @@ export interface EnrollmentFormData {
   researcherName: string;
   researcherEmail: string;
   icuAttending: string;
-  mrnHash: string;
+  mrn: string;
   inclusionChecks: Record<string, boolean>;
   exclusionChecks: Record<string, boolean>;
   eligibilityResult: EligibilityResult | null;

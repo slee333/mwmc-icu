@@ -90,7 +90,7 @@ async function main() {
   await clearAndWrite("Subjects", [
     [
       "Study ID",
-      "MRN Hash",
+      "MRN",
       "Site",
       "Allocation",
       "ICU Attending",

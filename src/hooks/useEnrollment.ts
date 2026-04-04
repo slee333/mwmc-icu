@@ -19,7 +19,7 @@ const initialForm: EnrollmentFormData = {
   researcherName: "",
   researcherEmail: "",
   icuAttending: "",
-  mrnHash: "",
+  mrn: "",
   inclusionChecks: {},
   exclusionChecks: {},
   eligibilityResult: null,

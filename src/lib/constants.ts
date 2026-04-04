@@ -71,7 +71,7 @@ export const SHEET_TABS = {
 // Sheet column headers
 export const SUBJECT_HEADERS = [
   "Study ID",
-  "MRN Hash",
+  "MRN",
   "Site",
   "Allocation",
   "ICU Attending",
@@ -114,11 +114,11 @@ export const USER_HEADERS = [
 ];
 
 export const LLM_MODEL = "claude-sonnet-4-20250514";
-export const LLM_MAX_TOKENS = 4096;
+export const LLM_MAX_TOKENS = 16384;
 
 export const LLM_MODELS = [
-  { id: "claude-sonnet-4-20250514", label: "Claude Sonnet 4 (Anthropic)", provider: "anthropic" as const, maxTokens: 4096 },
-  { id: "gemini-3.1-pro-preview", label: "Gemini 3.1 Pro (Google)", provider: "gemini" as const, maxTokens: 4096 },
+  { id: "gemini-3.1-pro-preview", label: "Gemini 3.1 Pro (Google)", provider: "gemini" as const, maxTokens: 16384 },
+  { id: "gpt-5.2", label: "GPT-5.2 (OpenAI)", provider: "openai" as const, maxTokens: 16384 },
 ];
 
-export const DEFAULT_LLM_MODEL = "gemini-3.1-pro-preview";
+export const DEFAULT_LLM_MODEL = "gpt-5.2";

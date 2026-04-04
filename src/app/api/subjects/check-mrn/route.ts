@@ -4,19 +4,19 @@ import { SHEET_TABS, SUBJECT_HEADERS } from "@/lib/constants";
 
 export async function POST(request: NextRequest) {
   try {
-    const { mrnHash } = await request.json();
+    const { mrn } = await request.json();
 
-    if (!mrnHash || typeof mrnHash !== "string") {
+    if (!mrn || typeof mrn !== "string") {
       return NextResponse.json(
-        { error: "mrnHash is required" },
+        { error: "mrn is required" },
         { status: 400 }
       );
     }
 
     const rows = await getAllDataRows(SHEET_TABS.SUBJECTS);
-    const mrnHashIndex = SUBJECT_HEADERS.indexOf("MRN Hash");
+    const mrnIndex = SUBJECT_HEADERS.indexOf("MRN");
 
-    const exists = rows.some((row) => row[mrnHashIndex] === mrnHash);
+    const exists = rows.some((row) => row[mrnIndex] === mrn.trim());
 
     return NextResponse.json({ exists });
   } catch (error) {
